@@ -7,17 +7,15 @@ import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 
-class SupabaseAuthService {
-    private val supabaseUrl = "https://hthlwgxchrqcesbykarz.supabase.co"
-    private val anonKey = "sb_publishable_JJuV69auIsjiUhJg9yqJRA_3d5ecNSR"
+class ApiAuthService {
+    // آدرس آی‌پی موقت شما تا زمان وصل شدن دامنه تنظیم شد
+    private val apiUrl = "http://193.141.65.207/~storezl/api.php"
 
-    private suspend fun rpcCallWithResult(functionName: String, jsonBody: org.json.JSONObject): String? = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+    private suspend fun rpcCallWithResult(action: String, jsonBody: org.json.JSONObject): String? = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
         try {
-            val url = java.net.URL("$supabaseUrl/rest/v1/rpc/$functionName")
+            val url = java.net.URL("$apiUrl?action=$action")
             val conn = url.openConnection() as java.net.HttpURLConnection
             conn.requestMethod = "POST"
-            conn.setRequestProperty("apikey", anonKey)
-            conn.setRequestProperty("Authorization", "Bearer $anonKey")
             conn.setRequestProperty("Content-Type", "application/json")
             conn.setRequestProperty("Accept", "application/json")
             conn.doOutput = true
@@ -39,18 +37,44 @@ class SupabaseAuthService {
         }
     }
 
-    private suspend fun rpcCall(functionName: String, jsonBody: org.json.JSONObject): Boolean {
-        val res = rpcCallWithResult(functionName, jsonBody) ?: return false
+    private suspend fun rpcCall(action: String, jsonBody: org.json.JSONObject): Boolean {
+        val res = rpcCallWithResult(action, jsonBody) ?: return false
         return res.trim() == "true"
     }
 
+    suspend fun hasPassword(email: String): Boolean {
+        val body = org.json.JSONObject().apply { put("p_email", email) }
+        return rpcCall("has_password", body)
+    }
+
+    suspend fun login(email: String, pass: String): Boolean {
+        val body = org.json.JSONObject().apply { 
+            put("p_email", email)
+            put("p_password", pass)
+        }
+        return rpcCall("login", body)
+    }
+
+    suspend fun signup(email: String, pass: String): Boolean {
+        val body = org.json.JSONObject().apply { 
+            put("p_email", email)
+            put("p_password", pass)
+            // ایمیل رو قبل از @ به عنوان یوزرنیم میفرستیم تا در بک‌اند استفاده بشه
+            put("username", email.substringBefore("@")) 
+        }
+        return rpcCall("signup", body)
+    }
+
+    // این موارد هنوز در بک‌اند PHP پیاده‌سازی کامل نشده‌اند
+    // اما برای اینکه ارور برنامه‌نویسی ندهند موقتا ساختار آن‌ها حفظ شده است.
+    
     suspend fun changePassword(email: String, currentPwd: String, newPwd: String): Boolean {
         val body = org.json.JSONObject().apply { 
             put("p_email", email)
             put("p_current_password", currentPwd)
             put("p_new_password", newPwd)
         }
-        return rpcCall("sf_change_password", body)
+        return rpcCall("change_password", body)
     }
 
     suspend fun adminListUsers(adminEmail: String, adminPwd: String): org.json.JSONArray? {
@@ -58,7 +82,7 @@ class SupabaseAuthService {
             put("p_admin_email", adminEmail)
             put("p_admin_password", adminPwd)
         }
-        val res = rpcCallWithResult("sf_admin_list_users", body) ?: return null
+        val res = rpcCallWithResult("admin_list_users", body) ?: return null
         return try { org.json.JSONArray(res) } catch(e: Exception) { null }
     }
 
@@ -71,7 +95,7 @@ class SupabaseAuthService {
             put("p_start", start ?: org.json.JSONObject.NULL)
             put("p_end", end ?: org.json.JSONObject.NULL)
         }
-        val res = rpcCallWithResult("sf_admin_set_subscription", body)
+        val res = rpcCallWithResult("admin_set_subscription", body)
         return res != null
     }
 
@@ -81,7 +105,7 @@ class SupabaseAuthService {
             put("p_admin_password", adminPwd)
             put("p_email", targetEmail)
         }
-        val res = rpcCallWithResult("sf_admin_delete_user", body)
+        val res = rpcCallWithResult("admin_delete_user", body)
         return res != null
     }
 
@@ -92,28 +116,7 @@ class SupabaseAuthService {
             put("p_telegram", telegram)
             put("p_bale", bale)
         }
-        val res = rpcCallWithResult("sf_admin_set_support", body)
+        val res = rpcCallWithResult("admin_set_support", body)
         return res != null
-    }
-
-    suspend fun hasPassword(email: String): Boolean {
-        val body = org.json.JSONObject().apply { put("p_email", email) }
-        return rpcCall("sf_has_password", body)
-    }
-
-    suspend fun login(email: String, pass: String): Boolean {
-        val body = org.json.JSONObject().apply { 
-            put("p_email", email)
-            put("p_password", pass)
-        }
-        return rpcCall("sf_login", body)
-    }
-
-    suspend fun signup(email: String, pass: String): Boolean {
-        val body = org.json.JSONObject().apply { 
-            put("p_email", email)
-            put("p_password", pass)
-        }
-        return rpcCall("sf_signup", body)
     }
 }

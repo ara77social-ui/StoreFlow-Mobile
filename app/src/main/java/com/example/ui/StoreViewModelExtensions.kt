@@ -14,41 +14,41 @@ fun StoreViewModel.saveUserEmail(email: String?) {
 }
 
 suspend fun StoreViewModel.hasPassword(email: String): Boolean {
-    val auth = com.example.data.SupabaseAuthService()
+    val auth = com.example.data.ApiAuthService()
     return auth.hasPassword(email)
 }
 
 suspend fun StoreViewModel.login(email: String, pass: String): Boolean {
-    val auth = com.example.data.SupabaseAuthService()
+    val auth = com.example.data.ApiAuthService()
     return auth.login(email, pass)
 }
 
 suspend fun StoreViewModel.signup(email: String, pass: String): Boolean {
-    val auth = com.example.data.SupabaseAuthService()
+    val auth = com.example.data.ApiAuthService()
     return auth.signup(email, pass)
 }
 
 suspend fun StoreViewModel.changePassword(email: String, currentPwd: String, newPwd: String): Boolean {
-    val auth = com.example.data.SupabaseAuthService()
+    val auth = com.example.data.ApiAuthService()
     return auth.changePassword(email, currentPwd, newPwd)
 }
 
 suspend fun StoreViewModel.adminListUsers(adminEmail: String, adminPwd: String): org.json.JSONArray? {
-    val auth = com.example.data.SupabaseAuthService()
+    val auth = com.example.data.ApiAuthService()
     return auth.adminListUsers(adminEmail, adminPwd)
 }
 
 suspend fun StoreViewModel.adminSetSubscription(adminEmail: String, adminPwd: String, targetEmail: String, status: String, start: String?, end: String?): Boolean {
-    val auth = com.example.data.SupabaseAuthService()
+    val auth = com.example.data.ApiAuthService()
     return auth.adminSetSubscription(adminEmail, adminPwd, targetEmail, status, start, end)
 }
 
 suspend fun StoreViewModel.adminDeleteUser(adminEmail: String, adminPwd: String, targetEmail: String): Boolean {
-    val auth = com.example.data.SupabaseAuthService()
+    val auth = com.example.data.ApiAuthService()
     return auth.adminDeleteUser(adminEmail, adminPwd, targetEmail)
 }
 
 suspend fun StoreViewModel.adminSetSupport(adminEmail: String, adminPwd: String, telegram: String, bale: String): Boolean {
-    val auth = com.example.data.SupabaseAuthService()
+    val auth = com.example.data.ApiAuthService()
     return auth.adminSetSupport(adminEmail, adminPwd, telegram, bale)
 }

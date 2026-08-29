@@ -32,11 +32,18 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.ui.components.AppBackground
 import com.example.ui.components.frostedGlass
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun StoreFlowApp(viewModel: StoreViewModel) {
     val navController = rememberNavController()
     val isDarkMode by viewModel.isDarkMode.collectAsState()
+    val context = LocalContext.current
+    var updateInfo by remember { mutableStateOf<UpdateManager.UpdateInfo?>(null) }
+
+    LaunchedEffect(Unit) {
+        updateInfo = UpdateManager.checkForUpdates()
+    }
     
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         AppBackground(isDarkMode = isDarkMode) {
@@ -78,6 +85,27 @@ fun StoreFlowApp(viewModel: StoreViewModel) {
                     NavItem("گزارشات", Icons.Default.BarChart, "reports", currentRoute, navController)
                     NavItem("محصولات", Icons.Default.Inventory2, "products", currentRoute, navController)
                     NavItem("تنظیمات", Icons.Default.Settings, "settings", currentRoute, navController)
+                }
+
+                if (updateInfo != null) {
+                    AlertDialog(
+                        onDismissRequest = { updateInfo = null },
+                        title = { Text("بروزرسانی جدید") },
+                        text = { Text("نسخه ${updateInfo!!.versionName} در دسترس است. آیا مایل به دانلود و نصب آن هستید؟") },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                UpdateManager.downloadAndInstall(context, updateInfo!!.downloadUrl)
+                                updateInfo = null
+                            }) {
+                                Text("دانلود و نصب")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { updateInfo = null }) {
+                                Text("بعداً")
+                            }
+                        }
+                    )
                 }
             }
         }
