@@ -31,6 +31,9 @@ jobs:
       run: |
         touch local.properties
         touch .env
+
+    - name: Generate debug keystore
+      run: keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "C=US, O=Android, CN=Android Debug"
         
     - name: Build Debug APK with Gradle
       run: gradle assembleDebug
