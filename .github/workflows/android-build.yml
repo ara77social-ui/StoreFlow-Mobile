@@ -3,12 +3,16 @@ name: Android CI
 on:
   push:
     branches: [ "main", "master" ]
+    tags:
+      - 'v*' # وقتی تگ ورژن جدید مثلا v1.2 پوش بشه، اجرا میشه
   pull_request:
     branches: [ "main", "master" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # دسترسی لازم برای ساخت Release در گیت‌هاب
 
     steps:
     - name: Checkout the code
@@ -31,8 +35,21 @@ jobs:
     - name: Build Debug APK with Gradle
       run: gradle assembleDebug
 
+    - name: Rename APK
+      run: mv app/build/outputs/apk/debug/app-debug.apk storeflow-update.apk
+
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
-        path: app/build/outputs/apk/debug/app-debug.apk
+        path: storeflow-update.apk
+
+    - name: Create GitHub Release
+      if: startsWith(github.ref, 'refs/tags/v') # فقط وقتی تگ ورژن زده بشه این مرحله اجرا میشه
+      uses: softprops/action-gh-release@v2
+      with:
+        files: storeflow-update.apk
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
