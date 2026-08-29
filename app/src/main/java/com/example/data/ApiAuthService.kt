@@ -8,8 +8,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class ApiAuthService {
-    // آدرس آی‌پی موقت شما تا زمان وصل شدن دامنه تنظیم شد
-    private val apiUrl = "http://193.141.65.207/~storezl/api.php"
+    // آدرس دامنه اصلی شما
+    private val apiUrl = "https://storeflow.ptteam.ir/api.php"
 
     private suspend fun rpcCallWithResult(action: String, jsonBody: org.json.JSONObject): String? = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
         try {
