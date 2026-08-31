@@ -164,7 +164,7 @@ fun DashboardScreen(viewModel: StoreViewModel, navController: NavController) {
 
         // New Sale Button
         Button(
-            onClick = { navController.navigate("sale") },
+            onClick = { navController.navigate("sale") { popUpTo("dashboard") { saveState = true }; launchSingleTop = true; restoreState = true } },
             modifier = Modifier.fillMaxWidth().height(48.dp),
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(
@@ -195,17 +195,17 @@ fun DashboardScreen(viewModel: StoreViewModel, navController: NavController) {
         // Quick Access Grid
         Row(modifier = Modifier.fillMaxWidth()) {
             Box(modifier = Modifier.weight(1f)) {
-                QuickAccessCard("محصولات", Icons.Default.Inventory2, { navController.navigate("products") }, isDarkMode)
+                QuickAccessCard("محصولات", Icons.Default.Inventory2, { navController.navigate("products") { popUpTo("dashboard") { saveState = true }; launchSingleTop = true; restoreState = true } }, isDarkMode)
             }
             Spacer(modifier = Modifier.width(10.dp))
             Box(modifier = Modifier.weight(1f)) {
-                QuickAccessCard("گزارش‌ها", Icons.Default.BarChart, { navController.navigate("reports") }, isDarkMode)
+                QuickAccessCard("گزارش‌ها", Icons.Default.BarChart, { navController.navigate("reports") { popUpTo("dashboard") { saveState = true }; launchSingleTop = true; restoreState = true } }, isDarkMode)
             }
         }
         Spacer(modifier = Modifier.height(10.dp))
         Row(modifier = Modifier.fillMaxWidth()) {
             Box(modifier = Modifier.weight(1f)) {
-                QuickAccessCard("مشتریان و حساب‌ها", Icons.Default.People, { navController.navigate("customers") }, isDarkMode)
+                QuickAccessCard("مشتریان و حساب‌ها", Icons.Default.People, { navController.navigate("customers") { popUpTo("dashboard") { saveState = true }; launchSingleTop = true; restoreState = true } }, isDarkMode)
             }
             Spacer(modifier = Modifier.width(10.dp))
             Box(modifier = Modifier.weight(1f)) {
@@ -222,7 +222,7 @@ fun DashboardScreen(viewModel: StoreViewModel, navController: NavController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Storefront, contentDescription = null, tint = Color(0xFF2563EB))
+                    Icon(Icons.Default.Storefront, contentDescription = null, tint = if (isDarkMode) Color(0xFF60A5FA) else Color(0xFF2563EB))
                     Spacer(modifier = Modifier.width(10.dp))
                     Column {
                         Text("شعبه دیگر", fontWeight = FontWeight.Bold, fontSize = 13.5.sp, color = textColor)
@@ -335,7 +335,7 @@ fun QuickAccessCard(title: String, icon: ImageVector, onClick: () -> Unit, isDar
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(icon, contentDescription = null, tint = Color(0xFF2563EB), modifier = Modifier.size(24.dp).padding(bottom = 6.dp))
+            Icon(icon, contentDescription = null, tint = if (isDarkMode) Color(0xFF60A5FA) else Color(0xFF2563EB), modifier = Modifier.size(24.dp).padding(bottom = 6.dp))
             Text(title, fontSize = 13.5.sp, fontWeight = FontWeight.Bold, color = if (isDarkMode) Color(0xFFF3F4F6) else Color(0xFF1F2937))
         }
     }

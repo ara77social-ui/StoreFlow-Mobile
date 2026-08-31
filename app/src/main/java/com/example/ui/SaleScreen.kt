@@ -71,7 +71,7 @@ fun SaleScreen(viewModel: StoreViewModel, navController: NavController) {
                     singleLine = true,
                     shape = RoundedCornerShape(16.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF2563EB),
+                        focusedBorderColor = if (isDarkMode) Color(0xFF60A5FA) else Color(0xFF2563EB),
                         unfocusedBorderColor = if(isDarkMode) Color(0xFF374151) else Color(0xFFE5E7EB),
                         focusedContainerColor = if(isDarkMode) Color(0xFF1F2937).copy(alpha=0.5f) else Color.White.copy(alpha=0.5f),
                         unfocusedContainerColor = if(isDarkMode) Color(0xFF1F2937).copy(alpha=0.5f) else Color.White.copy(alpha=0.5f),

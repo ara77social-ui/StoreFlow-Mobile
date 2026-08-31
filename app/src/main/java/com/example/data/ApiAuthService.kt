@@ -8,14 +8,16 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class ApiAuthService {
-    // آدرس دامنه اصلی شما
-    private val apiUrl = "https://storeflow.ptteam.ir/api.php"
+    // آدرس سرور با استفاده از IP مستقیم برای دور زدن مشکل DNS
+    private val apiUrl = "http://193.141.65.207/api.php"
+    private val hostName = "storeflow.ptteam.ir"
 
     private suspend fun rpcCallWithResult(action: String, jsonBody: org.json.JSONObject): String? = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
         try {
             val url = java.net.URL("$apiUrl?action=$action")
             val conn = url.openConnection() as java.net.HttpURLConnection
             conn.requestMethod = "POST"
+            conn.setRequestProperty("Host", hostName) // ارسال هدر Host برای تشخیص سایت در دایرکت ادمین
             conn.setRequestProperty("Content-Type", "application/json")
             conn.setRequestProperty("Accept", "application/json")
             conn.doOutput = true

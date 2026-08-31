@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دانلود استور فلو | StoreFlow</title>
+    <!-- اضافه کردن فریم‌ورک TailwindCSS برای استایل‌دهی سریع -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- اضافه کردن فونت زیبای وزیرمتن -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f3f4f6; /* پس‌زمینه خاکستری بسیار روشن */
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="max-w-md w-full bg-white p-8 rounded-[2rem] shadow-2xl text-center border border-gray-100 relative overflow-hidden">
+        
+        <!-- افکت پس‌زمینه تزئینی -->
+        <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-br from-blue-500 to-blue-700 opacity-10"></div>
+
+        <!-- آیکون اپلیکیشن -->
+        <div class="relative w-28 h-28 mx-auto bg-gradient-to-br from-blue-500 to-blue-700 rounded-3xl flex items-center justify-center shadow-lg mb-6 shadow-blue-500/40 mt-4">
+            <!-- آیکون فروشگاه -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+        </div>
+
+        <!-- عنوان و توضیحات -->
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-3 relative z-10">استور فلو</h1>
+        <p class="text-gray-500 mb-8 leading-relaxed relative z-10">ساده‌ترین و سریع‌ترین اپلیکیشن مدیریت فروشگاه، ثبت سفارش و حسابداری روی موبایل.</p>
+        
+        <!-- دکمه دانلود -->
+        <a href="storeflow.apk" class="relative z-10 inline-flex w-full items-center justify-center px-6 py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-all active:scale-95 shadow-xl shadow-blue-600/30">
+            <!-- آیکون دانلود -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            دانلود مستقیم اپلیکیشن
+        </a>
+        
+        <p class="mt-6 text-sm text-gray-400 font-medium relative z-10">نسخه اندروید (APK)</p>
+    </div>
+</body>
+</html>

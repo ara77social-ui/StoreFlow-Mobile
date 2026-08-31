@@ -23,6 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -47,7 +48,7 @@ fun StoreFlowApp(viewModel: StoreViewModel) {
     
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         AppBackground(isDarkMode = isDarkMode) {
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.fillMaxSize().systemBarsPadding()) {
                 // Main content
                 NavHost(
                     navController = navController,
@@ -80,11 +81,11 @@ fun StoreFlowApp(viewModel: StoreViewModel) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    NavItem("خانه", Icons.Default.Home, "dashboard", currentRoute, navController)
-                    NavItem("فروش", Icons.Default.ShoppingCart, "sale", currentRoute, navController)
-                    NavItem("گزارشات", Icons.Default.BarChart, "reports", currentRoute, navController)
-                    NavItem("محصولات", Icons.Default.Inventory2, "products", currentRoute, navController)
-                    NavItem("تنظیمات", Icons.Default.Settings, "settings", currentRoute, navController)
+                    NavItem("خانه", Icons.Default.Home, "dashboard", currentRoute, navController, isDarkMode)
+                    NavItem("فروش", Icons.Default.ShoppingCart, "sale", currentRoute, navController, isDarkMode)
+                    NavItem("گزارشات", Icons.Default.BarChart, "reports", currentRoute, navController, isDarkMode)
+                    NavItem("محصولات", Icons.Default.Inventory2, "products", currentRoute, navController, isDarkMode)
+                    NavItem("تنظیمات", Icons.Default.Settings, "settings", currentRoute, navController, isDarkMode)
                 }
 
                 if (updateInfo != null) {
@@ -118,16 +119,17 @@ fun RowScope.NavItem(
     icon: ImageVector,
     route: String,
     currentRoute: String?,
-    navController: NavHostController
+    navController: NavHostController,
+    isDarkMode: Boolean
 ) {
     val selected = currentRoute == route || (route == "sale" && currentRoute == "cart")
     val interactionSource = remember { MutableInteractionSource() }
     
     val scale by animateFloatAsState(targetValue = if (selected) 1.08f else 1f, label = "scale")
     
-    val selectedBgColor = Color(0xFF2563EB).copy(alpha = 0.14f)
-    val selectedTextColor = Color(0xFF2563EB)
-    val unselectedTextColor = Color(0xFF6B7280)
+    val selectedBgColor = if (isDarkMode) Color(0xFF60A5FA).copy(alpha = 0.15f) else Color(0xFF2563EB).copy(alpha = 0.14f)
+    val selectedTextColor = if (isDarkMode) Color(0xFF60A5FA) else Color(0xFF2563EB)
+    val unselectedTextColor = if (isDarkMode) Color(0xFFA0AAB0) else Color(0xFF4B5563)
     
     Box(
         modifier = Modifier
@@ -142,7 +144,9 @@ fun RowScope.NavItem(
                 onClick = {
                     if (currentRoute != route) {
                         navController.navigate(route) {
-                            popUpTo("dashboard") { saveState = true }
+                            popUpTo("dashboard") {
+                                saveState = true
+                            }
                             launchSingleTop = true
                             restoreState = true
                         }

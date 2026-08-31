@@ -85,7 +85,7 @@ fun CustomersScreen(viewModel: StoreViewModel, navController: NavController) {
             shape = RoundedCornerShape(14.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = grayColor.copy(alpha = 0.3f),
-                focusedBorderColor = Color(0xFF2563EB)
+                focusedBorderColor = if (isDarkMode) Color(0xFF60A5FA) else Color(0xFF2563EB)
             )
         )
 

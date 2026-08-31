@@ -1,6 +1,16 @@
 package com.example.ui.components
-
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.max
+import kotlin.math.sin
 import androidx.compose.animation.core.animateFloatAsState
+
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -80,34 +90,117 @@ fun GlassCard(
 
 
 
+
 @Composable
 fun AppBackground(isDarkMode: Boolean = true, content: @Composable () -> Unit) {
+    val infiniteTransition = rememberInfiniteTransition(label = "bg_anim")
+    
+    val phase1 by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = (2 * PI).toFloat(),
+        animationSpec = infiniteRepeatable(
+            animation = tween(20000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "phase1"
+    )
+
+    val phase2 by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = (2 * PI).toFloat(),
+        animationSpec = infiniteRepeatable(
+            animation = tween(25000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "phase2"
+    )
+
+    val phase3 by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = (2 * PI).toFloat(),
+        animationSpec = infiniteRepeatable(
+            animation = tween(30000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "phase3"
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .drawBehind {
-                val bgColor = if (isDarkMode) Color(0xFF0F172A) else Color(0xFFF8FAFC)
-                val c1 = if (isDarkMode) Color(0xFF6366F1).copy(alpha = 0.2f) else Color(0xFF3B82F6).copy(alpha = 0.15f)
-                val c2 = if (isDarkMode) Color(0xFFEC4899).copy(alpha = 0.2f) else Color(0xFF8B5CF6).copy(alpha = 0.1f)
+                // Light mode colors based on Bloom Field gradient (#E2E2E2 base + #1B9FFE + #4AC9FF)
+                val bgColor = if (isDarkMode) Color(0xFF0A0F1C) else Color(0xFFE2E2E2)
+                
+                // Color 1: #1B9FFE (Blue)
+                val color1 = if (isDarkMode) Color(0xFF0D4F88).copy(alpha = 0.5f) else Color(0xFF1B9FFE).copy(alpha = 0.45f)
+                // Color 2: #1B9FFE (Blue)
+                val color2 = if (isDarkMode) Color(0xFF1565C0).copy(alpha = 0.4f) else Color(0xFF1B9FFE).copy(alpha = 0.35f)
+                // Color 3: #4AC9FF (Light Blue)
+                val color3 = if (isDarkMode) Color(0xFF00796B).copy(alpha = 0.4f) else Color(0xFF4AC9FF).copy(alpha = 0.5f)
+
                 drawRect(bgColor)
+                
+                val w = size.width
+                val h = size.height
+                val radius = max(w, h) * 0.7f
+
+                // Center points oscillating using sine and cosine for smooth looping
+                // Approximating the React component's positions (35% 65%, 48% 20%, 80% 88%)
+                val cx1 = w * 0.35f + cos(phase1) * w * 0.15f
+                val cy1 = h * 0.65f + sin(phase1) * h * 0.15f
+
+                val cx2 = w * 0.48f + sin(phase2) * w * 0.2f
+                val cy2 = h * 0.20f + cos(phase2) * h * 0.15f
+                
+                val cx3 = w * 0.80f + cos(phase3) * w * 0.15f
+                val cy3 = h * 0.88f + sin(phase3) * h * 0.15f
+
+                // Draw circles with radial gradient
                 drawCircle(
                     brush = Brush.radialGradient(
-                        colors = listOf(c1, Color.Transparent),
-                        center = Offset(0f, 0f),
-                        radius = size.width * 0.8f
+                        colors = listOf(color1, Color.Transparent),
+                        center = Offset(cx1, cy1),
+                        radius = radius
                     ),
-                    center = Offset(0f, 0f),
-                    radius = size.width * 0.8f
+                    center = Offset(cx1, cy1),
+                    radius = radius
                 )
+                
                 drawCircle(
                     brush = Brush.radialGradient(
-                        colors = listOf(c2, Color.Transparent),
-                        center = Offset(size.width, size.height),
-                        radius = size.width * 0.8f
+                        colors = listOf(color2, Color.Transparent),
+                        center = Offset(cx2, cy2),
+                        radius = radius * 1.2f
                     ),
-                    center = Offset(size.width, size.height),
-                    radius = size.width * 0.8f
+                    center = Offset(cx2, cy2),
+                    radius = radius * 1.2f
                 )
+                
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(color3, Color.Transparent),
+                        center = Offset(cx3, cy3),
+                        radius = radius * 0.9f
+                    ),
+                    center = Offset(cx3, cy3),
+                    radius = radius * 0.9f
+                )
+                
+                // Overlay for light mode to mimic the (226,226,226) radial gradient glow
+                if (!isDarkMode) {
+                    val cx4 = w * 0.67f
+                    val cy4 = h * 0.45f
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(Color(0xFFE2E2E2).copy(alpha = 0.6f), Color.Transparent),
+                            center = Offset(cx4, cy4),
+                            radius = radius * 1.3f
+                        ),
+                        center = Offset(cx4, cy4),
+                        radius = radius * 1.3f
+                    )
+                }
             }
     ) {
         content()

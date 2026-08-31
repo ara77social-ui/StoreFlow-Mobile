@@ -127,7 +127,14 @@ fun SettingsScreen(viewModel: StoreViewModel, navController: NavController) {
                     Text(userEmail, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = textColor)
                     Text("ایمیل ورود · ${if(isAdmin) "مدیر سیستم" else "اشتراک فعال"}", fontSize = 12.sp, color = grayColor, modifier = Modifier.padding(top = 2.dp))
                 }
-                IconButton(onClick = { /* logout */ }) {
+                IconButton(onClick = { 
+                    viewModel.saveUserEmail(null)
+                    val intent = android.content.Intent(context, com.example.MainActivity::class.java).apply {
+                        flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                    context.startActivity(intent)
+                    (context as? android.app.Activity)?.finish()
+                }) {
                     Icon(Icons.Default.Logout, contentDescription = "Logout", tint = textColor)
                 }
             }
@@ -173,7 +180,7 @@ fun SettingsScreen(viewModel: StoreViewModel, navController: NavController) {
                     shape = RoundedCornerShape(14.dp),
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF2563EB),
+                        focusedBorderColor = if (isDarkMode) Color(0xFF60A5FA) else Color(0xFF2563EB),
                         unfocusedBorderColor = grayColor.copy(alpha = 0.3f)
                     )
                 )
@@ -186,7 +193,7 @@ fun SettingsScreen(viewModel: StoreViewModel, navController: NavController) {
                     shape = RoundedCornerShape(14.dp),
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF2563EB),
+                        focusedBorderColor = if (isDarkMode) Color(0xFF60A5FA) else Color(0xFF2563EB),
                         unfocusedBorderColor = grayColor.copy(alpha = 0.3f)
                     )
                 )

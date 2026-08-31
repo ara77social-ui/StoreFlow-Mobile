@@ -141,13 +141,19 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     private val _isDarkMode = MutableStateFlow(false)
     val isDarkMode: StateFlow<Boolean> = _isDarkMode
     
-    private val _biometricEnabled = MutableStateFlow(false)
+    private val _biometricEnabled = MutableStateFlow(
+        application.getSharedPreferences("store_prefs", android.content.Context.MODE_PRIVATE).getBoolean("biometric_enabled", false)
+    )
     val biometricEnabled: StateFlow<Boolean> = _biometricEnabled
 
     fun setStoreName(name: String) { _storeName.value = name }
     fun setOwnerName(name: String) { _ownerName.value = name }
     fun setDarkMode(enabled: Boolean) { _isDarkMode.value = enabled }
-    fun setBiometric(enabled: Boolean) { _biometricEnabled.value = enabled }
+    fun setBiometric(enabled: Boolean) { 
+        _biometricEnabled.value = enabled 
+        val prefs = getApplication<Application>().getSharedPreferences("store_prefs", android.content.Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("biometric_enabled", enabled).commit()
+    }
 
     // Repository operations
     fun addProduct(product: ProductEntity) = viewModelScope.launch { repository.insertProduct(product) }

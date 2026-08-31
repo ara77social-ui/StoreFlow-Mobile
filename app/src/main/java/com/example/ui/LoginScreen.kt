@@ -367,7 +367,7 @@ fun LoginScreen(
                         modifier = Modifier.fillMaxWidth().background(Color(0xFFEFF6FF), RoundedCornerShape(12.dp)).border(1.dp, Color(0xFFDCE7FF), RoundedCornerShape(12.dp)).padding(12.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("@Abol_2888 — تلگرام", color = Color(0xFF2563EB), fontSize = 14.5.sp, fontWeight = FontWeight.Bold)
+                        Text("@Abol_2888 — تلگرام", color = if (isDarkMode) Color(0xFF60A5FA) else Color(0xFF2563EB), fontSize = 14.5.sp, fontWeight = FontWeight.Bold)
                     }
                     
                     Spacer(modifier = Modifier.height(10.dp))
@@ -376,7 +376,7 @@ fun LoginScreen(
                         modifier = Modifier.fillMaxWidth().background(Color(0xFFEFF6FF), RoundedCornerShape(12.dp)).border(1.dp, Color(0xFFDCE7FF), RoundedCornerShape(12.dp)).padding(12.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("@abol2066 — بله", color = Color(0xFF2563EB), fontSize = 14.5.sp, fontWeight = FontWeight.Bold)
+                        Text("@abol2066 — بله", color = if (isDarkMode) Color(0xFF60A5FA) else Color(0xFF2563EB), fontSize = 14.5.sp, fontWeight = FontWeight.Bold)
                     }
                     
                     Spacer(modifier = Modifier.height(16.dp))
